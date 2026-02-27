@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESQAI — Real-Time Emergency Intelligence</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=DM+Mono&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ═════════════════ MODAL ═════════════════ -->
+    <div class="modal-overlay" id="pzModal">
+        <div class="modal">
+            <div class="modal-icon">🔴</div>
+            <div class="modal-title">PRIORITY ZONE ACTIVATED</div>
+            <div class="modal-body">
+                3 Critical reports detected within 500m radius in <strong id="pzLocation">Andheri East, Mumbai</strong>.<br><br> Nearest rescue team <strong>NDRF-07</strong> notified automatically.<br> NGO partner <strong>Goonj Mumbai</strong> webhook
+                triggered.
+            </div>
+            <button class="modal-btn" onclick="closePZModal()">ACKNOWLEDGE & RESPOND</button>
+        </div>
+    </div>
+
+    <!-- ═════════════════ MODAL ═════════════════ -->
+    <div class="modal-overlay" id="pzModal">
+        <div class="modal">
+            <div class="modal-icon">🔴</div>
+            <div class="modal-title">PRIORITY ZONE ACTIVATED</div>
+            <div class="modal-body">
+                3 Critical reports detected within 500m radius in <strong id="pzLocation">Andheri East, Mumbai</strong>.<br><br> Nearest rescue team <strong>NDRF-07</strong> notified automatically.<br> NGO partner <strong>Goonj Mumbai</strong> webhook
+                triggered.
+            </div>
+            <button class="modal-btn" onclick="closePZModal()">ACKNOWLEDGE & RESPOND</button>
+        </div>
+    </div>
+
+    <!-- ═════════════════ SCREEN 1: LANDING ═════════════════ -->
+    <div class="screen active" id="landing">
+
+        <div class="radar-bg">
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="radar-sweep"></div>
+        </div>
+
+        <nav class="nav">
+            <div class="logo">
+                <div class="logo-dot"></div>
+                ResQNetX
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="showScreen('citizen')">REPORT EMERGENCY</button>
+                <button class="nav-btn highlight" onclick="showScreen('dashboard')">CONTROL ROOM ▶</button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-badge">🚨 REAL-TIME EMERGENCY INTELLIGENCE SYSTEM</div>
+            <h1 class="hero-title">ResQNetX<span></span></h1>
+            <p class="hero-sub">REAL-TIME EMERGENCY SIGNAL & QUANTIFIED AI INTELLIGENCE</p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-num" id="totalReports">0</div>
+                    <div class="stat-label">REPORTS TODAY</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num amber" id="criticalCount">0</div>
+                    <div class="stat-label">CRITICAL ACTIVE</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num green" id="resolvedCount">0</div>
+                    <div class="stat-label">RESOLVED</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num cyan">4.2s</div>
+                    <div class="stat-label">AVG AI TRIAGE</div>
+                </div>
+            </div>
+
+            <div class="hero-ctas">
+                <button class="btn-primary" onclick="showScreen('citizen')">🆘 REPORT AN EMERGENCY</button>
+                <button class="btn-secondary" onclick="showScreen('dashboard')">▶ OPEN CONTROL ROOM</button>
+            </div>
+        </section>
+
+        <div class="flow-strip">
+            <div class="flow-step">
+                <div class="flow-icon">📱</div>
+                <div class="flow-text">CITIZEN REPORTS</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-icon">🤖</div>
+                <div class="flow-text">AI SCORES IN 4.2s</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-icon">🗺️</div>
+                <div class="flow-text">CLUSTER & PRIORITIZE</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-icon">🚒</div>
+                <div class="flow-text">RESCUE DISPATCHED</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-icon">✅</div>
+                <div class="flow-text">LIVES SAVED</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═════════════════ SCREEN 2: CITIZEN REPORT ═════════════════ -->
+    <div class="screen" id="citizen">
+
+        <header class="page-header">
+            <div class="page-logo" onclick="showScreen('landing')">
+                <div class="logo-dot"></div>
+                ResQNetX
+                <small>CITIZEN PORTAL</small>
+            </div>
+            <button class="nav-btn" onclick="showScreen('dashboard')">CONTROL ROOM →</button>
+            <button class="nav-btn" id="offlineModeToggle" style="background: var(--surface); color: var(--green); border-color: var(--green); margin-left: auto;" onclick="toggleOfflineMode()">📡 ONLINE</button>
+        </header>
+
+        <div class="report-container">
+
+            <div class="report-header">
+                <h1>REPORT EMERGENCY</h1>
+                <p>Your report is AI-triaged in under 5 seconds and sent directly to rescue teams.</p>
+            </div>
+
+            <div id="reportForm">
+
+                <div class="form-group">
+                    <div class="form-label"><span class="req">●</span> DISASTER TYPE</div>
+                    <select class="form-select" id="disasterType">
+                        <option value="">— SELECT DISASTER TYPE —</option>
+                        <option value="STRUCTURAL_COLLAPSE">🏢 Building Collapse</option>
+                        <option value="FLOOD">💧 Flood / Waterlogged</option>
+                        <option value="FIRE">🔥 Fire</option>
+                        <option value="LANDSLIDE">⛰️ Landslide</option>
+                        <option value="ACCIDENT">🚗 Traffic Accident</option>
+                        <option value="MEDICAL">🚑 Medical Emergency</option>
+                        <option value="ELECTROCUTION">⚡ Electrocution Hazard</option>
+                        <option value="GAS_LEAK">💨 Gas Leak</option>
+                        <option value="EXPLOSION">💥 Explosion</option>
+                        <option value="MISSING_PERSON">👤 Missing Person</option>
+                        <option value="VIOLENCE">⚠️ Violence / Crime</option>
+                        <option value="OTHER">📋 Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label"><span class="req">●</span> DESCRIBE YOUR SITUATION</div>
+                    <textarea class="form-textarea" id="incidentText" rows="4" placeholder="Describe what's happening — injuries, trapped people, fire, flood, collapse, etc."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label"><span class="req">●</span> LOCATION</div>
+                    <div class="location-row">
+                        <input class="form-input" id="locationInput" type="text" placeholder="Street, Area, City">
+                        <button class="gps-btn" id="gpsBtn" onclick="detectGPS()">📍 AUTO-DETECT GPS</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">PHOTO / VIDEO (OPTIONAL)</div>
+                    <div class="upload-zone">
+                        <input type="file" accept="image/*,video/*">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Drag & drop or click to upload</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">HOW URGENT IS THIS?</div>
+                    <input type="range" class="severity-slider" id="severitySlider" min="1" max="5" value="3" oninput="updateSeverity(this.value)">
+                    <div class="severity-display" id="severityDisplay">HIGH — PEOPLE MAY BE INJURED</div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button class="submit-btn" style="flex:1" onclick="submitReport()">🚨 SUBMIT EMERGENCY REPORT</button>
+                    <button class="submit-btn" style="flex:1; background: linear-gradient(135deg, var(--amber), var(--red))" onclick="submitSOSCall()">🆘 HELPING SOS</button>
+                </div>
+
+            </div>
+
+            <div class="success-panel" id="successPanel">
+                <div class="success-check">✓</div>
+                <div class="rps-title">RESCUE PRIORITY SCORE</div>
+                <div class="rps-big" id="rpsDisplay">--</div>
+                <div class="rps-label">/ 100</div>
+                <div class="success-info">
+                    Your report has been classified as <strong id="rpsCategory">CRITICAL</strong><br> Nearest rescue team notified. ETA: <strong id="etaDisplay">--</strong>
+                </div>
+                <button class="submit-btn" onclick="resetForm()">SUBMIT ANOTHER REPORT</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═════════════════ SCREEN 3: CONTROL ROOM ═════════════════ -->
+    <div class="screen" id="dashboard">
+
+        <header class="dash-header">
+
+            <div class="dash-logo">
+                <div class="logo-dot"></div>
+                ResQNetX </div>
+
+            <div class="metrics-bar">
+                <div class="metric">
+                    <div class="metric-val red" id="m-total">0</div>
+                    <div class="metric-key">TOTAL</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-val red" id="m-critical">0</div>
+                    <div class="metric-key">CRITICAL</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-val amber" id="m-high">0</div>
+                    <div class="metric-key">HIGH</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-val green">6</div>
+                    <div class="metric-key">TEAMS</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-val blue" id="m-zones">0</div>
+                    <div class="metric-key">ZONES</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-val cyan" id="m-eta">--</div>
+                    <div class="metric-key">AVG ETA</div>
+                </div>
+            </div>
+
+            <div class="dash-time" id="dashTime">--:--:--</div>
+
+            <button class="nav-btn" onclick="showScreen('landing')">← HOME</button>
+
+        </header>
+
+        <div class="dash-body">
+
+            <div class="feed-panel">
+                <div class="panel-title">+ INCOMING FEED <span id="feedCount">0 REPORTS</span></div>
+                <div class="feed-list" id="feedList"></div>
+            </div>
+
+            <div class="map-panel">
+                <div class="map-overlay" id="mapOverlay"></div>
+                <div class="map-tooltip" id="mapTooltip"></div>
+                <div class="map-legend" id="mapLegend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #e8341a;"></div>
+                        <span>CRITICAL</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #f59e0b;"></div>
+                        <span>HIGH</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #3b82f6;"></div>
+                        <span>MEDIUM</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #10b981;"></div>
+                        <span>LOW</span>
+                    </div>
+                </div>
+                <div class="pz-alert-banner" id="pzBanner">🔴 PRIORITY ZONE DETECTED</div>
+            </div>
+
+            <div class="queue-panel">
+                <div class="panel-title">🚒 RESCUE QUEUE <span style="float:right;font-size:0.7rem;color:var(--cyan)">SORTED BY RPS</span></div>
+                <div class="queue-list" id="queueList"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>
